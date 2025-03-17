@@ -2,7 +2,12 @@ package com.web.shop_ttcs.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -12,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,6 +51,12 @@ public class UserEntity {
         joinColumns = @JoinColumn(name = "userId", nullable = false),
         inverseJoinColumns = @JoinColumn(name = "shopId", nullable = false))
     private List<ShopEntity> shopEntities;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_" + role.getName());
+        return Collections.singleton(grantedAuthority);
+    }
 
 
 }

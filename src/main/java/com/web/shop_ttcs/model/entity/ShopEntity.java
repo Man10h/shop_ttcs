@@ -24,6 +24,6 @@ public class ShopEntity {
     @ManyToMany(mappedBy = "shopEntities")
     private List<UserEntity> userEntities;
 
-    @OneToMany(mappedBy = "shopEntity")
+    @OneToMany(mappedBy = "shopEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<ProductEntity> productEntities;
 }
