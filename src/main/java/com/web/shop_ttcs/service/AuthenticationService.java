@@ -6,4 +6,6 @@ import com.web.shop_ttcs.model.dto.UserRegisterDTO;
 public interface AuthenticationService {
     public String register(UserRegisterDTO userRegisterDTO);
     public String login(UserLoginDTO userLoginDTO);
+    public String verify(String email, String verificationCode);
+    public String resendVerificationCode(String email);
 }

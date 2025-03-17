@@ -35,4 +35,15 @@ public class HomeController {
         return ResponseEntity.ok(authenticationService.login(userLoginDTO));
     }
 
+    @GetMapping("/verify")
+    public ResponseEntity<String> verify(@RequestParam("verificationCode") String verificationCode,
+                                         @RequestParam("email") String email) {
+        return ResponseEntity.ok(authenticationService.verify(email, verificationCode));
+    }
+
+    @GetMapping("/resend")
+    public ResponseEntity<String> resend(@RequestParam("email") String email) {
+        return ResponseEntity.ok(authenticationService.resendVerificationCode(email));
+    }
+
 }
