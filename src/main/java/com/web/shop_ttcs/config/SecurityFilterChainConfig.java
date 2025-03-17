@@ -27,22 +27,22 @@ public class SecurityFilterChainConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MyCustomerSuccessHandler myCustomerSuccessHandler) throws Exception {
-        return
-                http
-                        .csrf(AbstractHttpConfigurer::disable)
-                        .authorizeHttpRequests(request -> request
-                                .requestMatchers("/customer").permitAll()
-                                .requestMatchers("/home").permitAll()
-                                .requestMatchers("/admin").permitAll()
-                                .anyRequest().authenticated()
-                        )
-                        .oauth2Login(oauth2 -> oauth2
-                                .successHandler(myCustomerSuccessHandler)
-                                .redirectionEndpoint(redirect -> redirect.baseUri("/login/oauth2/code/*"))
-                                .authorizationEndpoint(authorization -> authorization.baseUri("login/oauth2/authorization"))
-                        )
-                        .oauth2ResourceServer(oauth2 -> oauth2
-                                .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-                        .build();
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/customer/**").permitAll()
+                        .requestMatchers("/home/**").permitAll()
+                        .requestMatchers("/manager/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .successHandler(myCustomerSuccessHandler)
+                        .redirectionEndpoint(redirect -> redirect.baseUri("/login/oauth2/code/*"))
+                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                ;
+        return http.build();
     }
 }

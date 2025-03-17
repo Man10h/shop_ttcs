@@ -6,7 +6,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     #      none, update, auto-update
     properties:
       hibernate:
@@ -20,8 +20,8 @@ spring:
       client:
         registration:
           google:
-            client-id: {}
-            client-secret: {}
+            client-id: 587527461162-a54m3ptl5h91pp5qtvs826kqscgamifm.apps.googleusercontent.com
+            client-secret: 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
             redirect-uri: http://localhost:8081/login/oauth2/code/google
             scope:
               - email
@@ -34,5 +34,14 @@ spring:
             user-name-attribute: sub
 server:
   port: 8081
+
 path_private_key: private_key_pkcs8.pem
 path_public_key: public_key.pem
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.boot: DEBUG
+

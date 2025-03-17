@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Date;
 
 @Service
 public class TokenServiceImpl implements TokenService {
@@ -28,6 +29,27 @@ public class TokenServiceImpl implements TokenService {
         String roleName = userEntity.getRole().getName();
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(username)
+                .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 60))
+                .claim("roles", Collections.singletonList(roleName))
+                .build();
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.RS256);
+        SignedJWT signedJWT = new SignedJWT(jwsHeader, jwtClaimsSet);
+        try {
+            JWSSigner jwsSigner = new RSASSASigner(rsaKey);
+            signedJWT.sign(jwsSigner);
+            return signedJWT.serialize();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String generateRefreshToken(UserEntity userEntity) {
+        String username = userEntity.getUsername();
+        String roleName = userEntity.getRole().getName();
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
+                .subject(username)
+                .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 60 * 7))
                 .claim("roles", Collections.singletonList(roleName))
                 .build();
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.RS256);

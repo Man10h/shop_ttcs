@@ -6,9 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -22,7 +20,7 @@ public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    // basic attributes
     private String username;
     private String password;
     private String firstName;
@@ -32,7 +30,12 @@ public class UserEntity implements UserDetails {
     private String phoneNumber;
     private String email;
     private Long coins;
+    //
+    private Boolean enabled;
+    private String verificationCode;
+    private Date verificationCodeExpiration;
 
+    // relational
     @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<ImageEntity> imageEntities;
 
@@ -52,11 +55,14 @@ public class UserEntity implements UserDetails {
         inverseJoinColumns = @JoinColumn(name = "shopId", nullable = false))
     private List<ShopEntity> shopEntities;
 
+    @OneToMany(mappedBy = "userEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private List<RefreshTokenEntity> refreshTokenEntities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+        List<GrantedAuthority> authorities = new ArrayList<>();
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority("ROLE_" + role.getName());
-        return Collections.singleton(grantedAuthority);
+        authorities.add(grantedAuthority);
+        return authorities;
     }
-
-
 }
