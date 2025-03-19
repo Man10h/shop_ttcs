@@ -17,6 +17,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -133,7 +135,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     /*
     * logic: user login => delete all RefreshToken + create new RefreshToken
     * */
-    @Override
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class})
     public String login(UserLoginDTO userLoginDTO) {
         Optional<UserEntity> optionalUsername = userRepository.findByUsername(userLoginDTO.getUsername());
         if (optionalUsername.isEmpty()) {

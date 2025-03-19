@@ -17,6 +17,11 @@ public class HomeController {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @GetMapping("/hello")
+    public String home() {
+        return "Welcome to shop_ttcs";
+    }
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserRegisterDTO userRegisterDTO,
                                    BindingResult bindingResult) {

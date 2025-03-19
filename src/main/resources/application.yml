@@ -47,15 +47,15 @@ spring:
             required: true
 
 server:
-  port: 8080
+  port: 8081
 
 path_private_key: private_key_pkcs8.pem
 path_public_key: public_key.pem
 
-logging:
-  level:
-    root: INFO
-    org.springframework.security: DEBUG
-    org.springframework.web: DEBUG
-    org.springframework.boot: DEBUG
+#logging:
+#  level:
+#    root: INFO
+#    org.springframework.security: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springframework.boot: DEBUG
 

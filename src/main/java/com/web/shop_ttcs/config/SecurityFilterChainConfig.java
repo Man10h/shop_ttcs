@@ -1,6 +1,8 @@
 package com.web.shop_ttcs.config;
 
+import com.web.shop_ttcs.service.impl.CustomOAuth2UserService;
 import com.web.shop_ttcs.util.MyCustomerSuccessHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityFilterChainConfig {
+
+    @Autowired
+    private CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -36,9 +41,11 @@ public class SecurityFilterChainConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/home/hello")
                         .successHandler(myCustomerSuccessHandler)
                         .redirectionEndpoint(redirect -> redirect.baseUri("/login/oauth2/code/*"))
                         .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
