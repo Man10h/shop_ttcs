@@ -29,6 +29,7 @@ public class TokenServiceImpl implements TokenService {
         String roleName = userEntity.getRole().getName();
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(username)
+                .claim("type", "token")
                 .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 60))
                 .claim("roles", Collections.singletonList(roleName))
                 .build();
@@ -49,6 +50,7 @@ public class TokenServiceImpl implements TokenService {
         String roleName = userEntity.getRole().getName();
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(username)
+                .claim("type", "refresh_token")
                 .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 60 * 7))
                 .claim("roles", Collections.singletonList(roleName))
                 .build();

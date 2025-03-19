@@ -64,7 +64,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return "failed to register";
         }
         RoleEntity role = optionalRole.get();
-        String verificationCode = generateVerificationCode();
+        String verificationCode = generateCode();
         UserEntity user = UserEntity.builder()
                 .username(userRegisterDTO.getUsername())
                 .firstName(userRegisterDTO.getFirstName())
@@ -87,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         userRepository.save(user);
 
-        sendVerificationCode(userRegisterDTO.getEmail(), "VerificationCode", verificationCode);
+        sendCode(userRegisterDTO.getEmail(), "VerificationCode", verificationCode);
         return "registered successfully";
     }
 
@@ -123,15 +123,31 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(userEntity.getEnabled()){
             return "User already verified";
         }
-        String newCode = generateVerificationCode();
+        String newCode = generateCode();
 
         userEntity.setVerificationCode(newCode);
         userEntity.setVerificationCodeExpiration(new Date(new Date().getTime() + 1000 * 60 * 15));
         userRepository.save(userEntity);
 
-        sendVerificationCode(email, "VerificationCode", newCode);
-        return "check your email";
+        sendCode(email, "VerificationCode", newCode);
+        return "checked your email";
     }
+
+    @Override
+    public String forgotPassword(String email) {
+        Optional<UserEntity> optional = userRepository.findByEmail(email.toLowerCase());
+        if(optional.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+        UserEntity userEntity = optional.get();
+        String newPassword = generateCode();
+        userEntity.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(userEntity);
+
+        sendCode(email, "Password", newPassword);
+        return "checked your email";
+    }
+
     /*
     * logic: user login => delete all RefreshToken + create new RefreshToken
     * */
@@ -146,7 +162,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return "failed to login";
         }
         if(!userEntity.getEnabled()){
-            return "fail to login";
+            return "failed to login";
         }
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                 = new UsernamePasswordAuthenticationToken(userLoginDTO.getUsername(), userLoginDTO.getPassword(), userEntity.getAuthorities());
@@ -166,11 +182,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
 
-    public String generateVerificationCode(){
+    public String generateCode(){
         return new Random().nextInt(100000) + "";
     }
 
-    public void sendVerificationCode(String to, String subject, String content) {
+    public void sendCode(String to, String subject, String content) {
         String html = "<html>" + subject + ": " + content + "</html>";
         mailService.send(to, subject, html);
     }

@@ -30,9 +30,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new UserNotFoundException("User not found");
         }
         UserEntity userEntity = optionalUser.get();
-        System.out.println("OAuth2 User Attributes: " + attributes);
-        DefaultOAuth2User oAuth2UserDefault =new DefaultOAuth2User(optionalUser.get().getAuthorities(), attributes,"email");
-        return oAuth2UserDefault;
+        return new DefaultOAuth2User(userEntity.getAuthorities(), attributes,"email");
     }
 }
 

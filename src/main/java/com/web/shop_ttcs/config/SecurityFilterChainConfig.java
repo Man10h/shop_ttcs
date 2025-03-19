@@ -41,7 +41,6 @@ public class SecurityFilterChainConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/home/hello")
                         .successHandler(myCustomerSuccessHandler)
                         .redirectionEndpoint(redirect -> redirect.baseUri("/login/oauth2/code/*"))
                         .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))

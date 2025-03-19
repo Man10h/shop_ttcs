@@ -51,4 +51,9 @@ public class HomeController {
         return ResponseEntity.ok(authenticationService.resendVerificationCode(email));
     }
 
+    @GetMapping("/forgotPassword")
+    public ResponseEntity<String> forgotPassword(@RequestParam("email") String email) {
+        return ResponseEntity.ok(authenticationService.forgotPassword(email));
+    }
+
 }
