@@ -1,4 +1,4 @@
-package com.web.shop_ttcs.model.response;
+package com.web.shop_ttcs.model.dto;
 
 import lombok.*;
 
@@ -7,13 +7,12 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponse {
-    private Long id;
+public class ProductDTO {
+    private Long productId;
+    private Long shopId;
     private String name;
     private String description;
     private Double price;
     private String category;
     private Long quantity;
-    private Double rating;
-    private Long shopId;
 }

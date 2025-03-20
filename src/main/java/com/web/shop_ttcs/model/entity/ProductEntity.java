@@ -23,8 +23,7 @@ public class ProductEntity {
     private String description;
 
     private Double price;
-    private String categories;
-    private String color;
+    private String category;
     private Long quantity;
     private Long numberOfRate;
     private Double totalOfRate;

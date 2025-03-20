@@ -13,5 +13,6 @@ public class ShopResponse {
     private Long id;
     private String name;
     private String type;
+    private Double rating;
     private List<ProductResponse> productResponses;
 }

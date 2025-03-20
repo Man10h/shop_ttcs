@@ -1,5 +1,6 @@
 package com.web.shop_ttcs.exception;
 
+import com.web.shop_ttcs.exception.ex.ProductNotFoundException;
 import com.web.shop_ttcs.exception.ex.ShopNotFoundException;
 import com.web.shop_ttcs.exception.ex.UserNotAuthorizedException;
 import com.web.shop_ttcs.exception.ex.UserNotFoundException;
@@ -33,6 +34,15 @@ public class ExceptionHandling {
     @ExceptionHandler(ShopNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessageDTO shopNotFoundException(WebRequest webRequest, ShopNotFoundException e) {
+        return ExceptionMessageDTO.builder()
+                .status(10100L)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(ProductNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessageDTO productNotFoundException(WebRequest webRequest, ProductNotFoundException e) {
         return ExceptionMessageDTO.builder()
                 .status(10100L)
                 .message(e.getMessage())
