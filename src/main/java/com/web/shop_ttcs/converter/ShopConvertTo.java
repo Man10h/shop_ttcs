@@ -26,15 +26,10 @@ public class ShopConvertTo {
         ShopResponse shopResponse = modelMapper.map(shopEntity, ShopResponse.class);
         List<ProductEntity> productEntities = shopEntity.getProductEntities();
         List<ProductResponse> productResponses = new ArrayList<>();
-        Double totalOfRate = 0.0;
-        Long numberOfRate = 0L;
         for(ProductEntity productEntity : productEntities) {
-            totalOfRate+=(productEntity.getTotalOfRate()/productEntity.getNumberOfRate());
-            numberOfRate+=1;
             productResponses.add(productConvertTo.convertTo(productEntity));
         }
         shopResponse.setProductResponses(productResponses);
-        shopResponse.setRating(totalOfRate/numberOfRate);
         return shopResponse;
     }
 }

@@ -27,6 +27,7 @@ public class ProductEntity {
     private Long quantity;
     private Long numberOfRate;
     private Double totalOfRate;
+    private Double rating;
 
     @ManyToMany(mappedBy = "productEntities")
     private List<UserEntity> userEntities;

@@ -14,7 +14,6 @@ public class ProductConvertTo {
 
     public  ProductResponse convertTo(ProductEntity productEntity) {
         ProductResponse productResponse = modelMapper.map(productEntity, ProductResponse.class);
-        productResponse.setRating(productEntity.getTotalOfRate()/productEntity.getNumberOfRate());
         productResponse.setShopId(productEntity.getShopEntity().getId());
         return productResponse;
     }

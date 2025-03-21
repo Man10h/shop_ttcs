@@ -20,6 +20,7 @@ public class ShopEntity {
     private String name;
     private String address;
     private String type;
+    private Double rating;
 
     @ManyToMany(mappedBy = "shopEntities")
     private List<UserEntity> userEntities;

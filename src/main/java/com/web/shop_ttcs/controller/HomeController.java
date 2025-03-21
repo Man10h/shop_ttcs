@@ -1,14 +1,19 @@
 package com.web.shop_ttcs.controller;
 
+import com.web.shop_ttcs.model.dto.SearchDTO;
 import com.web.shop_ttcs.model.dto.UserLoginDTO;
 import com.web.shop_ttcs.model.dto.UserRegisterDTO;
 import com.web.shop_ttcs.model.entity.UserEntity;
+import com.web.shop_ttcs.model.response.ProductResponse;
 import com.web.shop_ttcs.service.AuthenticationService;
+import com.web.shop_ttcs.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/home")
@@ -16,6 +21,9 @@ public class HomeController {
 
     @Autowired
     private AuthenticationService authenticationService;
+
+    @Autowired
+    private ProductService productService;
 
     @GetMapping("/hello")
     public String home() {
@@ -54,6 +62,11 @@ public class HomeController {
     @GetMapping("/forgotPassword")
     public ResponseEntity<String> forgotPassword(@RequestParam("email") String email) {
         return ResponseEntity.ok(authenticationService.forgotPassword(email));
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<List<ProductResponse>> find(@ModelAttribute SearchDTO searchDTO) {
+        return ResponseEntity.ok(productService.find(searchDTO));
     }
 
 }
