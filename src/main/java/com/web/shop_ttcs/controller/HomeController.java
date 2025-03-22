@@ -5,6 +5,7 @@ import com.web.shop_ttcs.model.dto.UserLoginDTO;
 import com.web.shop_ttcs.model.dto.UserRegisterDTO;
 import com.web.shop_ttcs.model.entity.UserEntity;
 import com.web.shop_ttcs.model.response.ProductResponse;
+import com.web.shop_ttcs.model.response.UserResponse;
 import com.web.shop_ttcs.service.AuthenticationService;
 import com.web.shop_ttcs.service.ProductService;
 import jakarta.validation.Valid;
@@ -67,6 +68,11 @@ public class HomeController {
     @GetMapping("/find")
     public ResponseEntity<List<ProductResponse>> find(@ModelAttribute SearchDTO searchDTO) {
         return ResponseEntity.ok(productService.find(searchDTO));
+    }
+
+    @GetMapping("/infoToken")
+    public ResponseEntity<UserResponse> infoToken(@RequestParam("token") String token) {
+        return ResponseEntity.ok(null);
     }
 
 }

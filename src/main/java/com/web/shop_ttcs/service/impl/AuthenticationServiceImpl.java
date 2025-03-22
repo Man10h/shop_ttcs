@@ -6,6 +6,7 @@ import com.web.shop_ttcs.model.dto.UserRegisterDTO;
 import com.web.shop_ttcs.model.entity.RefreshTokenEntity;
 import com.web.shop_ttcs.model.entity.RoleEntity;
 import com.web.shop_ttcs.model.entity.UserEntity;
+import com.web.shop_ttcs.model.response.UserResponse;
 import com.web.shop_ttcs.repository.RefreshTokenRepository;
 import com.web.shop_ttcs.repository.RoleRepository;
 import com.web.shop_ttcs.repository.UserRepository;
@@ -146,6 +147,21 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         sendCode(email, "Password", newPassword);
         return "checked your email";
+    }
+
+    @Override
+    public UserResponse infoToken(String token) {
+        if(!tokenService.validateToken(token)){
+            return null;
+        }
+        UserEntity userEntity = tokenService.getUserEntity(token);
+        if(userEntity == null){
+            throw new UserNotFoundException("User not found");
+        }
+        /*
+        * TODO: convert UserEntity => UserResponse by creating new converter
+        * */
+        return null;
     }
 
     /*

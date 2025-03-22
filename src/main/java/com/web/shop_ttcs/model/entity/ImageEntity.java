@@ -20,5 +20,5 @@ public class ImageEntity {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private UserEntity user;
+    private UserEntity userEntity;
 }
