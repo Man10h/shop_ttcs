@@ -72,7 +72,7 @@ public class HomeController {
 
     @GetMapping("/infoToken")
     public ResponseEntity<UserResponse> infoToken(@RequestParam("token") String token) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(authenticationService.infoToken(token));
     }
 
 }

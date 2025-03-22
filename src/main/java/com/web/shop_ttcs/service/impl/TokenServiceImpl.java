@@ -74,9 +74,17 @@ public class TokenServiceImpl implements TokenService {
         try{
             JWSVerifier jwsVerifier = new RSASSAVerifier(rsaKey.toPublicJWK());
             SignedJWT signedJWT = SignedJWT.parse(token);
-            return signedJWT.verify(jwsVerifier)
-                    && !signedJWT.getJWTClaimsSet().getExpirationTime().before(new Date(new Date().getTime()))
-                    && !signedJWT.getJWTClaimsSet().getClaim("type").equals("refreshToken");
+            if(!signedJWT.verify(jwsVerifier)){
+                return false;
+            }
+            String type = signedJWT.getJWTClaimsSet().getClaim("type").toString();
+            if(!type.equals("token")){
+                return false;
+            }
+            if(signedJWT.getJWTClaimsSet().getExpirationTime().before(new Date(new Date().getTime()))){
+                return false;
+            }
+            return true;
         }catch (Exception e){
             return false;
         }
@@ -85,7 +93,7 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public UserEntity getUserEntity(String token) {
-        if(validateToken(token)){
+        if(!validateToken(token)){
             throw new UserNotFoundException("User not found");
         }
         try{

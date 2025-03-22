@@ -1,6 +1,8 @@
 package com.web.shop_ttcs.service.impl;
 
+import com.web.shop_ttcs.converter.UserConvertTo;
 import com.web.shop_ttcs.exception.ex.UserNotFoundException;
+import com.web.shop_ttcs.model.dto.ChangePasswordDTO;
 import com.web.shop_ttcs.model.dto.UserLoginDTO;
 import com.web.shop_ttcs.model.dto.UserRegisterDTO;
 import com.web.shop_ttcs.model.entity.RefreshTokenEntity;
@@ -46,6 +48,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private RefreshTokenRepository refreshTokenRepository;
+
+    @Autowired
+    private UserConvertTo userConvertTo;
 
     /*
     * logic: verify user by sending email
@@ -150,6 +155,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    public String changePassword(ChangePasswordDTO changePasswordDTO) {
+        if(changePasswordDTO.getUserId() == null ||
+        !changePasswordDTO.getNewPassword().equals(changePasswordDTO.getConfirmPassword())) {
+            return "failed to change password";
+        }
+        Optional<UserEntity> optional = userRepository.findById(changePasswordDTO.getUserId());
+        if (optional.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+        UserEntity userEntity = optional.get();
+        if(!passwordEncoder.matches(changePasswordDTO.getOldPassword(), userEntity.getPassword())){
+            return "failed to change password";
+        }
+        userEntity.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        userRepository.save(userEntity);
+        return "changed password successfully";
+    }
+
+    @Override
     public UserResponse infoToken(String token) {
         if(!tokenService.validateToken(token)){
             return null;
@@ -158,10 +182,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if(userEntity == null){
             throw new UserNotFoundException("User not found");
         }
-        /*
-        * TODO: convert UserEntity => UserResponse by creating new converter
-        * */
-        return null;
+        return userConvertTo.convertTo(userEntity);
     }
 
     /*

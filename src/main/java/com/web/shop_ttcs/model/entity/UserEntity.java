@@ -36,7 +36,7 @@ public class UserEntity implements UserDetails {
     private Date verificationCodeExpiration;
 
     // relational
-    @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToMany(mappedBy = "userEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<ImageEntity> imageEntities;
 
     @ManyToOne
