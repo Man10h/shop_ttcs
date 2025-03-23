@@ -2,6 +2,8 @@ package com.web.shop_ttcs.model.response;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -15,5 +17,6 @@ public class ProductResponse {
     private String category;
     private Long quantity;
     private Double rating;
+    private List<ImageResponse> imageResponses;
     private Long shopId;
 }

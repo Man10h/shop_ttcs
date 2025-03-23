@@ -108,4 +108,25 @@ public class TokenServiceImpl implements TokenService {
             return null;
         }
     }
+
+    @Override
+    public boolean validateRefreshToken(String refreshToken) {
+        try{
+            JWSVerifier jwsVerifier = new RSASSAVerifier(rsaKey.toPublicJWK());
+            SignedJWT signedJWT = SignedJWT.parse(refreshToken);
+            if(!signedJWT.verify(jwsVerifier)){
+                return false;
+            }
+            String type = signedJWT.getJWTClaimsSet().getClaim("type").toString();
+            if(!type.equals("refreshToken")){
+                return false;
+            }
+            if(signedJWT.getJWTClaimsSet().getExpirationTime().before(new Date(new Date().getTime()))){
+                return false;
+            }
+            return true;
+        }catch (Exception e){
+            return false;
+        }
+    }
 }

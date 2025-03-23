@@ -1,6 +1,10 @@
 package com.web.shop_ttcs.model.dto;
 
+import jakarta.mail.Multipart;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,4 +19,5 @@ public class ProductDTO {
     private Double price;
     private String category;
     private Long quantity;
+    private List<MultipartFile> images;
 }

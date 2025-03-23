@@ -1,6 +1,7 @@
 package com.web.shop_ttcs.service.impl;
 
 import com.web.shop_ttcs.converter.UserConvertTo;
+import com.web.shop_ttcs.exception.ex.RefreshTokenNotFoundException;
 import com.web.shop_ttcs.exception.ex.UserNotFoundException;
 import com.web.shop_ttcs.model.dto.ChangePasswordDTO;
 import com.web.shop_ttcs.model.dto.UserLoginDTO;
@@ -81,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .age(userRegisterDTO.getAge())
                 .coins(0L)
                 .phoneNumber(userRegisterDTO.getPhoneNumber())
-                .productEntities(new ArrayList<>())
+                .cartItemEntities(new ArrayList<>())
                 .imageEntities(new ArrayList<>())
                 .shopEntities(new ArrayList<>())
                 .refreshTokenEntities(new ArrayList<>())
@@ -183,6 +184,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new UserNotFoundException("User not found");
         }
         return userConvertTo.convertTo(userEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public String refreshToken(String token) {
+        if(!tokenService.validateRefreshToken(token)){
+            return "refreshed token invalid";
+        }
+        Optional<RefreshTokenEntity> optional = refreshTokenRepository.findByRefreshToken(token);
+        if (optional.isEmpty()) {
+            throw new RefreshTokenNotFoundException("Refresh token not found");
+        }
+        RefreshTokenEntity refreshTokenEntity = optional.get();
+        UserEntity userEntity = refreshTokenEntity.getUserEntity();
+        return tokenService.generateToken(userEntity);
     }
 
     /*

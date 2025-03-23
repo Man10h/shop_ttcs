@@ -13,7 +13,7 @@ public enum Type {
         this.name = name;
     }
 
-    public static Map<String, String> getMap(){
+    public static Map<String, String> toMap(){
         Map<String, String> map = new HashMap<String, String>();
         for(Type type : Type.values()){
             map.put(type.toString(), type.name);

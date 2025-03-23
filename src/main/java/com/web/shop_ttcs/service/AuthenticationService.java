@@ -13,4 +13,5 @@ public interface AuthenticationService {
     public String forgotPassword(String email);
     public String changePassword(ChangePasswordDTO changePasswordDTO);
     public UserResponse infoToken(String token);
+    public String refreshToken(String token);
 }

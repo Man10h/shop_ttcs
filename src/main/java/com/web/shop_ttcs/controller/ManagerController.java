@@ -35,12 +35,12 @@ public class ManagerController {
     }
 
     @PostMapping("/createProduct")
-    public ResponseEntity<String> createProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<String> createProduct(@ModelAttribute ProductDTO productDTO) {
         return ResponseEntity.ok(productService.createProduct(productDTO));
     }
 
     @PostMapping("/editProduct")
-    public ResponseEntity<String> editProduct(@RequestBody ProductDTO productDTO) {
+    public ResponseEntity<String> editProduct(@ModelAttribute ProductDTO productDTO) {
         return ResponseEntity.ok(productService.editProduct(productDTO));
     }
 

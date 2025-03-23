@@ -43,11 +43,8 @@ public class UserEntity implements UserDetails {
     @JoinColumn(name = "roleId")
     private RoleEntity role;
 
-    @ManyToMany
-    @JoinTable(name = "user_product",
-        joinColumns = @JoinColumn(name = "userId", nullable = false),
-        inverseJoinColumns = @JoinColumn(name = "productId", nullable = false))
-    private List<ProductEntity> productEntities;
+    @OneToMany(mappedBy = "userEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<CartItemEntity> cartItemEntities;
 
     @ManyToMany
     @JoinTable(name = "user_shop",

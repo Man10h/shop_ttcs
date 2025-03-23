@@ -7,4 +7,5 @@ public interface TokenService {
     public String generateRefreshToken(UserEntity userEntity);
     public boolean validateToken(String token);
     public UserEntity getUserEntity(String token);
+    public boolean validateRefreshToken(String refreshToken);
 }

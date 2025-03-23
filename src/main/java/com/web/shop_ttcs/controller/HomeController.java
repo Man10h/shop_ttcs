@@ -75,4 +75,14 @@ public class HomeController {
         return ResponseEntity.ok(authenticationService.infoToken(token));
     }
 
+    @GetMapping("/refreshToken")
+    public ResponseEntity<String> refreshToken(@RequestParam("token") String token) {
+        return ResponseEntity.ok(authenticationService.refreshToken(token));
+    }
+
+    @GetMapping("/product")
+    public ResponseEntity<ProductResponse> product(@RequestParam("id") Long id) {
+        return ResponseEntity.ok(productService.getProductById(id));
+    }
+
 }

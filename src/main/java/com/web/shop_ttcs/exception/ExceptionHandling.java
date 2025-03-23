@@ -1,9 +1,6 @@
 package com.web.shop_ttcs.exception;
 
-import com.web.shop_ttcs.exception.ex.ProductNotFoundException;
-import com.web.shop_ttcs.exception.ex.ShopNotFoundException;
-import com.web.shop_ttcs.exception.ex.UserNotAuthorizedException;
-import com.web.shop_ttcs.exception.ex.UserNotFoundException;
+import com.web.shop_ttcs.exception.ex.*;
 import com.web.shop_ttcs.model.dto.ExceptionMessageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,6 +40,15 @@ public class ExceptionHandling {
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionMessageDTO productNotFoundException(WebRequest webRequest, ProductNotFoundException e) {
+        return ExceptionMessageDTO.builder()
+                .status(10100L)
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessageDTO refreshTokenNotFoundException(WebRequest webRequest, RefreshTokenNotFoundException e) {
         return ExceptionMessageDTO.builder()
                 .status(10100L)
                 .message(e.getMessage())

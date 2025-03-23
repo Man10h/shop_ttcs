@@ -29,10 +29,13 @@ public class ProductEntity {
     private Double totalOfRate;
     private Double rating;
 
-    @ManyToMany(mappedBy = "productEntities")
-    private List<UserEntity> userEntities;
+    @OneToMany(mappedBy = "productEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private List<CartItemEntity> cartItemEntities;
 
     @ManyToOne
     @JoinColumn(name = "shopId")
     private ShopEntity shopEntity;
+
+    @OneToMany(mappedBy = "productEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private List<ImageEntity> imageEntities;
 }

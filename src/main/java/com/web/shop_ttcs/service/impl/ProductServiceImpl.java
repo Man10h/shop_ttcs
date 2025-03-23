@@ -5,17 +5,23 @@ import com.web.shop_ttcs.exception.ex.ProductNotFoundException;
 import com.web.shop_ttcs.exception.ex.ShopNotFoundException;
 import com.web.shop_ttcs.model.dto.ProductDTO;
 import com.web.shop_ttcs.model.dto.SearchDTO;
+import com.web.shop_ttcs.model.entity.ImageEntity;
 import com.web.shop_ttcs.model.entity.ProductEntity;
 import com.web.shop_ttcs.model.entity.ShopEntity;
 import com.web.shop_ttcs.model.response.ProductResponse;
+import com.web.shop_ttcs.repository.ImageRepository;
 import com.web.shop_ttcs.repository.ProductRepository;
 import com.web.shop_ttcs.repository.ShopRepository;
+import com.web.shop_ttcs.service.CloudinaryService;
 import com.web.shop_ttcs.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,6 +36,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductConvertTo productConvertTo;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
 
     @Transactional(readOnly = true)
@@ -62,9 +74,25 @@ public class ProductServiceImpl implements ProductService {
                 .numberOfRate(1L)
                 .totalOfRate(5.0)
                 .rating(5.0)
+                .cartItemEntities(new ArrayList<>())
+                .imageEntities(new ArrayList<>())
                 .shopEntity(shopEntity)
                 .build();
         productRepository.save(productEntity);
+
+        if(!productDTO.getImages().isEmpty()){
+            for(MultipartFile file : productDTO.getImages()) {
+                Map<String, Object> results = cloudinaryService.upload(file);
+                ImageEntity imageEntity = ImageEntity.builder()
+                        .url(results.get("url").toString())
+                        .name(results.get("original_filename").toString())
+                        .publicId(results.get("public_id").toString())
+                        .productEntity(productEntity)
+                        .build();
+                imageRepository.save(imageEntity);
+            }
+        }
+
         return "create product successfully";
     }
 
@@ -93,6 +121,20 @@ public class ProductServiceImpl implements ProductService {
         if (productDTO.getQuantity() != null){
             productEntity.setQuantity(productDTO.getQuantity());
         }
+
+        if(!productDTO.getImages().isEmpty()){
+            for(MultipartFile file : productDTO.getImages()) {
+                Map<String, Object> results = cloudinaryService.upload(file);
+                ImageEntity imageEntity = ImageEntity.builder()
+                        .url(results.get("url").toString())
+                        .name(results.get("original_filename").toString())
+                        .publicId(results.get("public_id").toString())
+                        .productEntity(productEntity)
+                        .build();
+                imageRepository.save(imageEntity);
+            }
+        }
+
         productRepository.save(productEntity);
         return "edit product successfully";
     }
