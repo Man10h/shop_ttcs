@@ -16,6 +16,8 @@ import com.web.shop_ttcs.service.CloudinaryService;
 import com.web.shop_ttcs.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -158,6 +160,8 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = optionalProduct.get();
         return productConvertTo.convertTo(productEntity);
     }
+
+
 
 
 }

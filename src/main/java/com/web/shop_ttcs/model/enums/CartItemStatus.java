@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum CartItemStatus {
-    PENDING(""),
-    ORDERED(""),
-    CANCELLED("");
+    PENDING("Đang giao hàng"),
+    ORDERED("Đã đặt hàng"),
+    ADD("Thêm vào rỏ hàng"),
+    CANCELLED("Hủy đặt hàng");
 
     private final String status;
     private CartItemStatus(String status) {

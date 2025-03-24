@@ -38,4 +38,7 @@ public class ProductEntity {
 
     @OneToMany(mappedBy = "productEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<ImageEntity> imageEntities;
+
+    @Version
+    private Long version;
 }
