@@ -55,4 +55,13 @@ public class ExceptionHandling {
                 .build();
     }
 
+    @ExceptionHandler(CartItemNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionMessageDTO cartItemNotFoundException(WebRequest webRequest, CartItemNotFoundException e) {
+        return ExceptionMessageDTO.builder()
+                .status(10100L)
+                .message(e.getMessage())
+                .build();
+    }
+
 }

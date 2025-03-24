@@ -37,12 +37,12 @@ public class CustomerController {
     }
 
     @PostMapping("/createCartItem")
-    public ResponseEntity<CartItemResponse> createCartItem(@RequestBody CartItemDTO cartItemDTO) {
+    public ResponseEntity<String> createCartItem(@RequestBody CartItemDTO cartItemDTO) {
         return ResponseEntity.ok(cartItemService.createCartItem(cartItemDTO));
     }
 
     @PostMapping("/editCartItem")
-    public ResponseEntity<CartItemResponse> editCartItem(@RequestBody CartItemDTO cartItemDTO) {
+    public ResponseEntity<String> editCartItem(@RequestBody CartItemDTO cartItemDTO) {
         return ResponseEntity.ok(cartItemService.editCartItem(cartItemDTO));
     }
 
@@ -61,6 +61,15 @@ public class CustomerController {
         return ResponseEntity.ok(cartItemService.deleteCartItem(cartItemId));
     }
 
+    @GetMapping("/order")
+    public ResponseEntity<String> order(@RequestParam(name = "cartItemId") Long cartItemId) {
+        return ResponseEntity.ok(cartItemService.order(cartItemId));
+    }
+
+    @GetMapping("/cancel")
+    public ResponseEntity<String> cancel(@RequestParam(name = "cartItemId") Long cartItemId) {
+        return ResponseEntity.ok(cartItemService.cancel(cartItemId));
+    }
 
 
 }
