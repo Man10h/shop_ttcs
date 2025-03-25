@@ -1,10 +1,13 @@
 package com.web.shop_ttcs.config;
 
 import com.web.shop_ttcs.service.impl.CustomOAuth2UserService;
+import com.web.shop_ttcs.util.AuditorAwareImpl;
 import com.web.shop_ttcs.util.MyCustomerSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -14,7 +17,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableJpaAuditing
 public class SecurityFilterChainConfig {
+
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        return new AuditorAwareImpl();
+    }
 
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;

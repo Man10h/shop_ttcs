@@ -91,6 +91,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .role(role)
                 .email(userRegisterDTO.getEmail())
                 .enabled(false)
+                .ratingEntities(new ArrayList<>())
                 .build();
         userRepository.save(user);
 

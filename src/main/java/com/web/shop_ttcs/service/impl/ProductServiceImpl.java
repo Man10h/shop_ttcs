@@ -79,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
                 .cartItemEntities(new ArrayList<>())
                 .imageEntities(new ArrayList<>())
                 .shopEntity(shopEntity)
+                .ratingEntities(new ArrayList<>())
                 .build();
         productRepository.save(productEntity);
 
@@ -161,7 +162,17 @@ public class ProductServiceImpl implements ProductService {
         return productConvertTo.convertTo(productEntity);
     }
 
-
+    @Override
+    public ProductResponse infoProduct(Long productId) {
+        if(productId == null) {
+            return null;
+        }
+        Optional<ProductEntity> optionalProduct = productRepository.findById(productId);
+        if(optionalProduct.isEmpty()) {
+            throw new ProductNotFoundException("Product not found");
+        }
+        return productConvertTo.convertAll(optionalProduct.get());
+    }
 
 
 }

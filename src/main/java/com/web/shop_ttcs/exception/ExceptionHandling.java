@@ -64,4 +64,13 @@ public class ExceptionHandling {
                 .build();
     }
 
+    @ExceptionHandler(RatingNotFoundException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ExceptionMessageDTO ratingNotFoundException(WebRequest webRequest, RatingNotFoundException e) {
+        return ExceptionMessageDTO.builder()
+                .status(10100L)
+                .message(e.getMessage())
+                .build();
+    }
+
 }

@@ -2,6 +2,8 @@ package com.web.shop_ttcs.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import java.util.List;
 
@@ -39,6 +41,15 @@ public class ProductEntity {
     @OneToMany(mappedBy = "productEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
     private List<ImageEntity> imageEntities;
 
+    @OneToMany(mappedBy = "productEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private List<RatingEntity> ratingEntities;
+
     @Version
     private Long version;
+
+    @CreatedBy
+    private String createdBy;
+
+    @LastModifiedBy
+    private String lastModifiedBy;
 }

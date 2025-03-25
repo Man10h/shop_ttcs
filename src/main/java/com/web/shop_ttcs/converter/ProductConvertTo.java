@@ -2,9 +2,11 @@ package com.web.shop_ttcs.converter;
 
 import com.web.shop_ttcs.model.entity.ImageEntity;
 import com.web.shop_ttcs.model.entity.ProductEntity;
+import com.web.shop_ttcs.model.entity.RatingEntity;
 import com.web.shop_ttcs.model.enums.Category;
 import com.web.shop_ttcs.model.response.ImageResponse;
 import com.web.shop_ttcs.model.response.ProductResponse;
+import com.web.shop_ttcs.model.response.RatingResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +23,10 @@ public class ProductConvertTo {
     @Autowired
     private ImageConvertTo imageConvertTo;
 
+    @Autowired
+    private RatingConvertTo ratingConvertTo;
+
+    // find/search Product
     public  ProductResponse convertTo(ProductEntity productEntity) {
         ProductResponse productResponse = modelMapper.map(productEntity, ProductResponse.class);
         productResponse.setShopId(productEntity.getShopEntity().getId());
@@ -32,6 +38,29 @@ public class ProductConvertTo {
             imageResponses.add(imageConvertTo.convertTo(imageEntity));
         }
         productResponse.setImageResponses(imageResponses);
+        return productResponse;
+    }
+
+    // click to Product
+    public ProductResponse convertAll(ProductEntity productEntity) {
+        ProductResponse productResponse = modelMapper.map(productEntity, ProductResponse.class);
+        productResponse.setShopId(productEntity.getShopEntity().getId());
+        // category
+        if(!productEntity.getCategory().isEmpty()){
+            productResponse.setCategory(Category.toMap().get(productEntity.getCategory()));
+        }
+        // image
+        List<ImageResponse> imageResponses = new ArrayList<>();
+        for(ImageEntity imageEntity: productEntity.getImageEntities()){
+            imageResponses.add(imageConvertTo.convertTo(imageEntity));
+        }
+        productResponse.setImageResponses(imageResponses);
+        // rating
+        List<RatingResponse> ratingResponses = new ArrayList<>();
+        for(RatingEntity ratingEntity: productEntity.getRatingEntities()){
+            ratingResponses.add(ratingConvertTo.convertToComment(ratingEntity));
+        }
+        productResponse.setRatingResponses(ratingResponses);
         return productResponse;
     }
 }

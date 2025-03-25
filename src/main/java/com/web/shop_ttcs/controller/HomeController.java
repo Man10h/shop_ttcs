@@ -85,4 +85,9 @@ public class HomeController {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
+    @GetMapping("/infoProduct")
+    public ResponseEntity<ProductResponse> infoProduct(@RequestParam("productId") Long productId) {
+        return ResponseEntity.ok(productService.infoProduct(productId));
+    }
+
 }

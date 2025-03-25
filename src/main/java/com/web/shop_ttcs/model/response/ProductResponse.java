@@ -18,5 +18,6 @@ public class ProductResponse {
     private Long quantity;
     private Double rating;
     private List<ImageResponse> imageResponses;
+    private List<RatingResponse> ratingResponses;
     private Long shopId;
 }

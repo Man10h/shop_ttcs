@@ -2,8 +2,11 @@ package com.web.shop_ttcs.controller;
 
 import com.web.shop_ttcs.model.dto.CartItemDTO;
 import com.web.shop_ttcs.model.dto.ChangePasswordDTO;
+import com.web.shop_ttcs.model.dto.RatingDTO;
 import com.web.shop_ttcs.model.dto.UserDTO;
 import com.web.shop_ttcs.model.response.CartItemResponse;
+import com.web.shop_ttcs.model.response.RatingResponse;
+import com.web.shop_ttcs.model.response.ShopResponse;
 import com.web.shop_ttcs.service.AuthenticationService;
 import com.web.shop_ttcs.service.CartItemService;
 import com.web.shop_ttcs.service.UserService;
@@ -70,6 +73,44 @@ public class CustomerController {
     public ResponseEntity<String> cancel(@RequestParam(name = "cartItemId") Long cartItemId) {
         return ResponseEntity.ok(cartItemService.cancel(cartItemId));
     }
+
+    @GetMapping("/follow")
+    public ResponseEntity<String> follow(@RequestParam(name = "userId") Long userId,
+                                         @RequestParam(name = "shopId") Long shopId) {
+        return ResponseEntity.ok(userService.followShop(userId, shopId));
+    }
+
+    @GetMapping("/unfollow")
+    public ResponseEntity<String> unfollow(@RequestParam(name = "userId") Long userId,
+                                           @RequestParam(name = "shopId") Long shopId) {
+        return ResponseEntity.ok(userService.unfollowShop(userId, shopId));
+    }
+
+    @GetMapping("/getAllFollowedShops")
+    public ResponseEntity<List<ShopResponse>> getAllFollowedShops(@RequestParam(name = "userId") Long userId) {
+        return ResponseEntity.ok(userService.getAllFollowedShops(userId));
+    }
+
+    @PostMapping("/createRating")
+    public ResponseEntity<String> createRating(@RequestBody RatingDTO ratingDTO) {
+        return ResponseEntity.ok(userService.createRating(ratingDTO));
+    }
+
+    @PostMapping("/editRating")
+    public ResponseEntity<String> editRating(@RequestBody RatingDTO ratingDTO) {
+        return ResponseEntity.ok(userService.editRating(ratingDTO));
+    }
+
+    @DeleteMapping("/deleteRating/{ratingId}")
+    public ResponseEntity<String> deleteRating(@PathVariable("ratingId") Long ratingId) {
+        return ResponseEntity.ok(userService.deleteRating(ratingId));
+    }
+
+    @GetMapping("/ratings")
+    public ResponseEntity<List<RatingResponse>> getRatings(@RequestParam(name = "userId") Long userId) {
+        return ResponseEntity.ok(userService.getAllRatings(userId));
+    }
+
 
 
 }
