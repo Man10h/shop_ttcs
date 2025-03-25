@@ -14,5 +14,5 @@ import java.util.Optional;
 public interface RatingRepository extends JpaRepository<RatingEntity, Long> {
     Optional<RatingEntity> findByUserEntityAndProductEntity(UserEntity userEntity, ProductEntity productEntity);
     List<RatingEntity> findByUserEntity(UserEntity userEntity);
-    List<RatingEntity> findByProductEntity(ProductEntity productEntity);
+    List<RatingEntity> findByProductEntity_Id(Long productId);
 }

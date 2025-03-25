@@ -1,14 +1,17 @@
 package com.web.shop_ttcs.service.impl;
 
 import com.web.shop_ttcs.converter.ProductConvertTo;
+import com.web.shop_ttcs.converter.RatingConvertTo;
 import com.web.shop_ttcs.exception.ex.ProductNotFoundException;
 import com.web.shop_ttcs.exception.ex.ShopNotFoundException;
 import com.web.shop_ttcs.model.dto.ProductDTO;
 import com.web.shop_ttcs.model.dto.SearchDTO;
 import com.web.shop_ttcs.model.entity.ImageEntity;
 import com.web.shop_ttcs.model.entity.ProductEntity;
+import com.web.shop_ttcs.model.entity.RatingEntity;
 import com.web.shop_ttcs.model.entity.ShopEntity;
 import com.web.shop_ttcs.model.response.ProductResponse;
+import com.web.shop_ttcs.model.response.RatingResponse;
 import com.web.shop_ttcs.repository.ImageRepository;
 import com.web.shop_ttcs.repository.ProductRepository;
 import com.web.shop_ttcs.repository.ShopRepository;
@@ -44,6 +47,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ImageRepository imageRepository;
+    @Autowired
+    private RatingConvertTo ratingConvertTo;
 
 
     @Transactional(readOnly = true)
@@ -162,17 +167,7 @@ public class ProductServiceImpl implements ProductService {
         return productConvertTo.convertTo(productEntity);
     }
 
-    @Override
-    public ProductResponse infoProduct(Long productId) {
-        if(productId == null) {
-            return null;
-        }
-        Optional<ProductEntity> optionalProduct = productRepository.findById(productId);
-        if(optionalProduct.isEmpty()) {
-            throw new ProductNotFoundException("Product not found");
-        }
-        return productConvertTo.convertAll(optionalProduct.get());
-    }
+
 
 
 }

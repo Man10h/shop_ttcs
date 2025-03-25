@@ -5,9 +5,11 @@ import com.web.shop_ttcs.model.dto.UserLoginDTO;
 import com.web.shop_ttcs.model.dto.UserRegisterDTO;
 import com.web.shop_ttcs.model.entity.UserEntity;
 import com.web.shop_ttcs.model.response.ProductResponse;
+import com.web.shop_ttcs.model.response.RatingResponse;
 import com.web.shop_ttcs.model.response.UserResponse;
 import com.web.shop_ttcs.service.AuthenticationService;
 import com.web.shop_ttcs.service.ProductService;
+import com.web.shop_ttcs.service.RatingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,9 @@ public class HomeController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private RatingService ratingService;
 
     @GetMapping("/hello")
     public String home() {
@@ -86,8 +91,8 @@ public class HomeController {
     }
 
     @GetMapping("/infoProduct")
-    public ResponseEntity<ProductResponse> infoProduct(@RequestParam("productId") Long productId) {
-        return ResponseEntity.ok(productService.infoProduct(productId));
+    public ResponseEntity<List<RatingResponse>> infoProduct(@RequestParam("productId") Long productId) {
+        return ResponseEntity.ok(ratingService.getRatings(productId));
     }
 
 }

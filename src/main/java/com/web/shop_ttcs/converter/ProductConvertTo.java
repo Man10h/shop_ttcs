@@ -23,8 +23,6 @@ public class ProductConvertTo {
     @Autowired
     private ImageConvertTo imageConvertTo;
 
-    @Autowired
-    private RatingConvertTo ratingConvertTo;
 
     // find/search Product
     public  ProductResponse convertTo(ProductEntity productEntity) {
@@ -41,26 +39,4 @@ public class ProductConvertTo {
         return productResponse;
     }
 
-    // click to Product
-    public ProductResponse convertAll(ProductEntity productEntity) {
-        ProductResponse productResponse = modelMapper.map(productEntity, ProductResponse.class);
-        productResponse.setShopId(productEntity.getShopEntity().getId());
-        // category
-        if(!productEntity.getCategory().isEmpty()){
-            productResponse.setCategory(Category.toMap().get(productEntity.getCategory()));
-        }
-        // image
-        List<ImageResponse> imageResponses = new ArrayList<>();
-        for(ImageEntity imageEntity: productEntity.getImageEntities()){
-            imageResponses.add(imageConvertTo.convertTo(imageEntity));
-        }
-        productResponse.setImageResponses(imageResponses);
-        // rating
-        List<RatingResponse> ratingResponses = new ArrayList<>();
-        for(RatingEntity ratingEntity: productEntity.getRatingEntities()){
-            ratingResponses.add(ratingConvertTo.convertToComment(ratingEntity));
-        }
-        productResponse.setRatingResponses(ratingResponses);
-        return productResponse;
-    }
 }
