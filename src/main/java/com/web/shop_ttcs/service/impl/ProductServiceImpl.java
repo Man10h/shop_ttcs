@@ -18,6 +18,7 @@ import com.web.shop_ttcs.repository.ShopRepository;
 import com.web.shop_ttcs.service.CloudinaryService;
 import com.web.shop_ttcs.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -52,6 +53,7 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "product", key = "#searchDTO.toString()")
     public List<ProductResponse> find(SearchDTO searchDTO) {
         List<ProductEntity> productEntities = productRepository.find(searchDTO);
         if(productEntities.isEmpty()){
@@ -157,7 +159,7 @@ public class ProductServiceImpl implements ProductService {
         return "delete product successfully";
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public ProductResponse getProductById(Long productId) {
         Optional<ProductEntity> optionalProduct = productRepository.findById(productId);
         if(optionalProduct.isEmpty()) {

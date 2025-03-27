@@ -159,11 +159,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public String createRating(RatingDTO ratingDTO) {
         if(ratingDTO.getUserId() == null || ratingDTO.getProductId() == null
-        || ratingDTO.getRate() == null){
+        || ratingDTO.getRating() == null){
             return "cannot rate product";
         }
         Optional<UserEntity> optionalUser = userRepository.findById(ratingDTO.getUserId());
-        if(optionalUser.isEmpty()){
+        if(optionalUser.isEmpty() || !optionalUser.get().getEnabled()){
             throw new UserNotFoundException("User not found");
         }
         UserEntity userEntity = optionalUser.get();
@@ -181,12 +181,13 @@ public class UserServiceImpl implements UserService {
         RatingEntity ratingEntity = RatingEntity.builder()
                 .productEntity(productEntity)
                 .userEntity(userEntity)
+                .rating(ratingDTO.getRating())
                 .content(ratingDTO.getContent())
                 .build();
         ratingRepository.save(ratingEntity);
         // update product
         Long numberOfRate = productEntity.getNumberOfRate() + 1;
-        Double totalOfRate = productEntity.getTotalOfRate() + numberOfRate;
+        Double totalOfRate = productEntity.getTotalOfRate() + ratingDTO.getRating();
         productEntity.setNumberOfRate(numberOfRate);
         productEntity.setTotalOfRate(totalOfRate);
         productEntity.setRating(totalOfRate/numberOfRate);
@@ -207,8 +208,8 @@ public class UserServiceImpl implements UserService {
         if(!ratingDTO.getContent().isEmpty()){
             ratingEntity.setContent(ratingDTO.getContent());
         }
-        if(ratingDTO.getRate() != null){
-            ratingEntity.setRating(ratingDTO.getRate());
+        if(ratingDTO.getRating() != null){
+            ratingEntity.setRating(ratingDTO.getRating());
         }
         ratingRepository.save(ratingEntity);
         return "edit rating product successfully";
@@ -240,6 +241,14 @@ public class UserServiceImpl implements UserService {
             throw new RatingNotFoundException("Rating not found");
         }
         RatingEntity ratingEntity = optionalRating.get();
+        ProductEntity productEntity = ratingEntity.getProductEntity();
+        Double totalOfRate = productEntity.getTotalOfRate() - ratingEntity.getRating();
+        Long numberOfRate = productEntity.getNumberOfRate() - 1;
+        productEntity.setNumberOfRate(numberOfRate);
+        productEntity.setTotalOfRate(totalOfRate);
+        productEntity.setRating(totalOfRate/numberOfRate);
+        productRepository.save(productEntity);
+
         ratingRepository.delete(ratingEntity);
         return "delete rating product successfully";
     }

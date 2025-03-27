@@ -11,6 +11,6 @@ public class RatingDTO {
     private Long id;
     private Long userId;
     private Long productId;
-    private Double rate;
+    private Double rating;
     private String content;
 }

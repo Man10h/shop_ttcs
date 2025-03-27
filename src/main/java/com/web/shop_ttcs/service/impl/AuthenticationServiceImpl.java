@@ -17,6 +17,7 @@ import com.web.shop_ttcs.service.AuthenticationService;
 import com.web.shop_ttcs.service.MailService;
 import com.web.shop_ttcs.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -175,7 +176,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return "changed password successfully";
     }
 
-    @Override
+    @Cacheable(value = "token", key = "#token")
+    @Transactional(readOnly = true)
     public UserResponse infoToken(String token) {
         if(!tokenService.validateToken(token)){
             return null;
