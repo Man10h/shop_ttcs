@@ -1,5 +1,7 @@
 package com.web.shop_ttcs.model.response;
 
+import com.web.shop_ttcs.model.entity.ProductEntity;
+import com.web.shop_ttcs.model.entity.UserEntity;
 import lombok.*;
 
 @Getter
@@ -11,6 +13,6 @@ public class RatingResponse {
     private Long id;
     private String content;
     private Double rating;
-    private UserResponse userResponse;
-    private ProductResponse productResponse;
+    private UserRatingResponse userRatingResponse;
+    private ProductRatingResponse productRatingResponse;
 }

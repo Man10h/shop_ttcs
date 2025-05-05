@@ -23,6 +23,9 @@ public class ProductConvertTo {
     @Autowired
     private ImageConvertTo imageConvertTo;
 
+    @Autowired
+    private RatingConvertTo ratingConvertTo;
+
 
     // find/search Product
     public  ProductResponse convertTo(ProductEntity productEntity) {
@@ -36,6 +39,11 @@ public class ProductConvertTo {
             imageResponses.add(imageConvertTo.convertTo(imageEntity));
         }
         productResponse.setImageResponses(imageResponses);
+        List<RatingResponse> ratingResponses = new ArrayList<>();
+        for(RatingEntity ratingEntity: productEntity.getRatingEntities()){
+            ratingResponses.add(ratingConvertTo.convertToComment(ratingEntity));
+        }
+        productResponse.setRatingResponses(ratingResponses);
         return productResponse;
     }
 
