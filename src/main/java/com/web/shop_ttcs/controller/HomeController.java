@@ -95,4 +95,9 @@ public class HomeController {
         return ResponseEntity.ok(ratingService.getRatings(productId));
     }
 
+    @GetMapping("/findAll")
+    public ResponseEntity<List<ProductResponse>> findAll() {
+        return ResponseEntity.ok(productService.find(null));
+    }
+
 }
