@@ -24,7 +24,6 @@ public class ShopConvertTo {
     @Autowired
     private ProductConvertTo productConvertTo;
 
-
     public ShopResponse convertTo(ShopEntity shopEntity) {
         ShopResponse shopResponse = modelMapper.map(shopEntity, ShopResponse.class);
         List<ProductEntity> productEntities = shopEntity.getProductEntities();
@@ -41,6 +40,9 @@ public class ShopConvertTo {
         }
         //
         shopResponse.setRating(total/productEntities.size());
+
+        //
+        shopResponse.setFollowers((long) shopEntity.getUserEntities().size());
         return shopResponse;
     }
 }
