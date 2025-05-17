@@ -60,8 +60,6 @@ public class SecurityFilterChainConfig {
                         .requestMatchers("/manager/createProduct").permitAll()
                         .requestMatchers("/manager/editProduct").permitAll()
                         .requestMatchers("/manager/deleteProduct/{productId}").permitAll()
-
-
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2

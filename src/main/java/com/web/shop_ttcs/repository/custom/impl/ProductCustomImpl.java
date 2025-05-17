@@ -19,13 +19,20 @@ public class ProductCustomImpl implements ProductCustom {
     private EntityManager em;
 
     public static void joinTable(SearchDTO searchDTO, StringBuilder sql) {
-        if(!searchDTO.getShopName().isEmpty() || !searchDTO.getShopType().isEmpty()
-        || !searchDTO.getShopAddress().isEmpty() || searchDTO.getShopRating() != null) {
+        if(searchDTO == null) {
+            return;
+        }
+        if(searchDTO.getShopName() != null || searchDTO.getShopType() != null
+        || searchDTO.getShopAddress() != null || searchDTO.getShopRating() != null) {
             sql.append("JOIN shop s ON s.id = p.shop_id ");
         }
     }
 
     public static void queryNormal(SearchDTO searchDTO, StringBuilder sql) {
+        if(searchDTO == null) {
+            return;
+        }
+
         try{
             Field[] fields = SearchDTO.class.getDeclaredFields();
             for (Field field : fields) {
@@ -53,13 +60,16 @@ public class ProductCustomImpl implements ProductCustom {
     }
 
     public static void querySpecial(SearchDTO searchDTO, StringBuilder sql) {
-        if(!searchDTO.getShopName().isBlank()){
+        if(searchDTO == null) {
+            return;
+        }
+        if(searchDTO.getShopName() != null){
             sql.append(" AND s.name LIKE '%" + searchDTO.getShopName() + "%' ");
         }
-        if(!searchDTO.getShopType().isBlank()){
+        if(searchDTO.getShopType() != null){
             sql.append(" AND s.type LIKE '%" + searchDTO.getShopType() + "%' ");
         }
-        if(!searchDTO.getShopAddress().isBlank()){
+        if(searchDTO.getShopAddress() != null){
             sql.append(" AND s.address LIKE '%" + searchDTO.getShopAddress() + "%' ");
         }
         if(searchDTO.getShopRating() != null){
