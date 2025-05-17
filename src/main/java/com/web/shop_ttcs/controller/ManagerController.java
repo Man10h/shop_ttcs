@@ -49,8 +49,4 @@ public class ManagerController {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
-    @GetMapping("/infoShop")
-    public ResponseEntity<ShopResponse> infoShop(@RequestParam(name = "shopId")Long shopId) {
-        return ResponseEntity.ok(shopService.infoShop(shopId));
-    }
 }
