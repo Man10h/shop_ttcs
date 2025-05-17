@@ -10,12 +10,12 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDTO {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private Long age;
-    private String sex;
-    private String phoneNumber;
-    private List<MultipartFile> images;
-}
+    public class UserDTO {
+        private Long id;
+        private String firstName;
+        private String lastName;
+        private Long age;
+        private String sex;
+        private String phoneNumber;
+        private List<MultipartFile> images;
+    }
