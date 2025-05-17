@@ -53,13 +53,13 @@ public class ProductCustomImpl implements ProductCustom {
     }
 
     public static void querySpecial(SearchDTO searchDTO, StringBuilder sql) {
-        if(!searchDTO.getShopName().isEmpty()){
+        if(!searchDTO.getShopName().isBlank()){
             sql.append(" AND s.name LIKE '%" + searchDTO.getShopName() + "%' ");
         }
-        if(!searchDTO.getShopType().isEmpty()){
+        if(!searchDTO.getShopType().isBlank()){
             sql.append(" AND s.type LIKE '%" + searchDTO.getShopType() + "%' ");
         }
-        if(!searchDTO.getShopAddress().isEmpty()){
+        if(!searchDTO.getShopAddress().isBlank()){
             sql.append(" AND s.address LIKE '%" + searchDTO.getShopAddress() + "%' ");
         }
         if(searchDTO.getShopRating() != null){

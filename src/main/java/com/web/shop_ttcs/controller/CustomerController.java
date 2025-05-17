@@ -110,7 +110,4 @@ public class CustomerController {
     public ResponseEntity<List<RatingResponse>> getRatings(@RequestParam(name = "userId") Long userId) {
         return ResponseEntity.ok(userService.getAllRatings(userId));
     }
-
-
-
 }
