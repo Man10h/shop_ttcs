@@ -38,12 +38,13 @@ public class HomeController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid UserRegisterDTO userRegisterDTO,
-                                   BindingResult bindingResult) {
+                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.ok("failed to register user");
         }
         return ResponseEntity.ok(authenticationService.register(userRegisterDTO));
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody UserLoginDTO userLoginDTO,

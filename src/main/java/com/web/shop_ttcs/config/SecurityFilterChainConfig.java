@@ -42,11 +42,26 @@ public class SecurityFilterChainConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MyCustomerSuccessHandler myCustomerSuccessHandler) throws Exception {
         http
+
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/customer/**").permitAll()
                         .requestMatchers("/home/**").permitAll()
                         .requestMatchers("/manager/**").permitAll()
+                        .requestMatchers("/home/register").permitAll()
+                        .requestMatchers("/home/verify").permitAll()
+                        .requestMatchers("/home/find").permitAll()
+                        .requestMatchers("/home/refreshToken").permitAll()
+                        .requestMatchers("/home/forgotPassword").permitAll()
+                        .requestMatchers("/manager/createShop").permitAll()
+                        .requestMatchers("/manager/deleteShop/{shopId}").permitAll()
+                        .requestMatchers("/manager/editShop").permitAll()
+                        .requestMatchers("/manager/infoShop").permitAll()
+                        .requestMatchers("/manager/createProduct").permitAll()
+                        .requestMatchers("/manager/editProduct").permitAll()
+                        .requestMatchers("/manager/deleteProduct/{productId}").permitAll()
+
+
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
