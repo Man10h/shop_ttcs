@@ -95,7 +95,11 @@ public class CartItemServiceImpl implements CartItemService {
         if(optional.isEmpty()){
             return "failed to delete";
         }
-        cartItemRepository.delete(optional.get());
+        CartItemEntity cartItemEntity = optional.get();
+        ProductEntity productEntity = productRepository.findByCartItemId(cartItemId);
+        productEntity.setQuantity(productEntity.getQuantity() + cartItemEntity.getQuantity());
+        productRepository.save(productEntity);
+        cartItemRepository.delete(cartItemEntity);
         return "deleted successfully";
     }
 
@@ -118,10 +122,11 @@ public class CartItemServiceImpl implements CartItemService {
             return "failed to edit cart item";
         }
         CartItemEntity cartItemEntity = optional.get();
+        Long quantityOld = cartItemEntity.getQuantity();
         cartItemEntity.setQuantity(cartItemDTO.getQuantity());
         cartItemRepository.save(cartItemEntity);
 
-        productEntity.setQuantity(productEntity.getQuantity() - cartItemDTO.getQuantity());
+        productEntity.setQuantity(productEntity.getQuantity() + quantityOld - cartItemDTO.getQuantity());
         productRepository.save(productEntity);
 
         return "edit cart item successfully";

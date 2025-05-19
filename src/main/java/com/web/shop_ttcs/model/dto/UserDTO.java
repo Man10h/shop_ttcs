@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-    public class UserDTO {
+public class UserDTO {
         private Long id;
         private String firstName;
         private String lastName;
@@ -18,4 +18,4 @@ import java.util.List;
         private String sex;
         private String phoneNumber;
         private List<MultipartFile> images;
-    }
+}

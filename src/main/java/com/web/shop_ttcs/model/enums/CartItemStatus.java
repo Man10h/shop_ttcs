@@ -5,7 +5,7 @@ import java.util.Map;
 
 public enum CartItemStatus {
     ORDERED("Đã đặt hàng"),
-    ADDED("Thêm vào rỏ hàng"),
+    ADDED("Thêm vào giỏ hàng"),
     CANCELLED("Hủy đặt hàng");
 
     private final String status;
