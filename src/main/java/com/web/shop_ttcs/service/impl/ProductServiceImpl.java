@@ -160,6 +160,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "product", key = "#productId")
     public ProductResponse getProductById(Long productId) {
         Optional<ProductEntity> optionalProduct = productRepository.findById(productId);
         if(optionalProduct.isEmpty()) {
@@ -168,8 +169,4 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = optionalProduct.get();
         return productConvertTo.convertTo(productEntity);
     }
-
-
-
-
 }
