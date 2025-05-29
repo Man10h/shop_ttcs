@@ -74,7 +74,7 @@ public class ShopServiceImpl implements ShopService {
         if(!userEntity.getRole().getName().equals("MANAGER")){
             throw new UserNotAuthorizedException("User not authorized");
         }
-        if(!userEntity.getShopEntities().isEmpty()){
+        if(!userEntity.getOwnShopEntities().isEmpty()){
             return "You cannot create a new shop";
         }
         List<UserEntity> userEntityList = new ArrayList<>();
@@ -85,6 +85,7 @@ public class ShopServiceImpl implements ShopService {
                 .type(shopDTO.getType())
                 .productEntities(new ArrayList<>())
                 .userEntities(userEntityList)
+                .userEntity(userEntity)
                 .build();
         shopRepository.save(shopEntity);
         return "created a new shop successfully";

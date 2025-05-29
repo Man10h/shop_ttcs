@@ -2,6 +2,7 @@ package com.web.shop_ttcs.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,15 @@ import java.util.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
+@NamedEntityGraph(
+        name = "user-ownShop-role-refreshToken-image",
+        attributeNodes = {
+                @NamedAttributeNode(value = "ownShopEntities"),
+                @NamedAttributeNode(value = "role"),
+                @NamedAttributeNode(value = "refreshTokenEntities"),
+                @NamedAttributeNode(value = "imageEntities"),
+        }
+)
 public class UserEntity implements UserDetails {
 
     @Id
@@ -57,6 +67,9 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "userEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private List<RatingEntity> ratingEntities;
+
+    @OneToMany(mappedBy = "userEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
+    private List<ShopEntity> ownShopEntities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

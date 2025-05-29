@@ -3,9 +3,11 @@ package com.web.shop_ttcs.converter;
 
 import com.web.shop_ttcs.model.entity.ImageEntity;
 import com.web.shop_ttcs.model.entity.RefreshTokenEntity;
+import com.web.shop_ttcs.model.entity.ShopEntity;
 import com.web.shop_ttcs.model.entity.UserEntity;
 import com.web.shop_ttcs.model.response.ImageResponse;
 import com.web.shop_ttcs.model.response.RefreshTokenResponse;
+import com.web.shop_ttcs.model.response.ShopResponse;
 import com.web.shop_ttcs.model.response.UserResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class UserConvertTo {
     @Autowired
     private RefreshTokenConvertTo refreshTokenConvertTo;
 
+    @Autowired
+    private ShopConvertTo shopConvertTo;
+
     public UserResponse convertTo(UserEntity userEntity) {
         UserResponse userResponse = modelMapper.map(userEntity, UserResponse.class);
         userResponse.setRoleName(userEntity.getRole().getName());
@@ -43,6 +48,15 @@ public class UserConvertTo {
             refreshTokenResponses.add(refreshTokenConvertTo.convertTo(refreshTokenEntity));
         }
         userResponse.setRefreshTokens(refreshTokenResponses);
+
+        //shops convert
+        List<ShopResponse> shopResponses = new ArrayList<>();
+        List<ShopEntity> shopEntities = userEntity.getShopEntities();
+        for(ShopEntity shopEntity : shopEntities) {
+            shopResponses.add(shopConvertTo.convertTo(shopEntity));
+        }
+        userResponse.setShops(shopResponses);
+
         return userResponse;
     }
 }

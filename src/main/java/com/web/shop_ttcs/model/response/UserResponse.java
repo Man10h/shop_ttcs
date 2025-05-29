@@ -23,4 +23,5 @@ public class UserResponse {
     private String roleName;
     private List<ImageResponse> images;
     private List<RefreshTokenResponse> refreshTokens;
+    private List<ShopResponse> shops;
 }
