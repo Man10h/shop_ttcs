@@ -93,6 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(userRegisterDTO.getEmail())
                 .enabled(false)
                 .ratingEntities(new ArrayList<>())
+                .ownShopEntities(new ArrayList<>())
                 .build();
         userRepository.save(user);
 
