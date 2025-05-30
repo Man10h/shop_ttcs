@@ -12,6 +12,7 @@ import java.util.List;
 public class ShopResponse {
     private Long id;
     private String name;
+    private String address;
     private String type;
     private Double rating;
     private Long followers;
