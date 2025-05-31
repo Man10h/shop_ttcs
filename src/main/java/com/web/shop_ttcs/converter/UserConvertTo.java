@@ -50,10 +50,10 @@ public class UserConvertTo {
         userResponse.setRefreshTokens(refreshTokenResponses);
 
         //shops convert
-        List<ShopResponse> shopResponses = new ArrayList<>();
-        List<ShopEntity> shopEntities = userEntity.getShopEntities();
+        List<Long> shopResponses = new ArrayList<>();
+        List<ShopEntity> shopEntities = userEntity.getOwnShopEntities();
         for(ShopEntity shopEntity : shopEntities) {
-            shopResponses.add(shopConvertTo.convertTo(shopEntity));
+            shopResponses.add(shopEntities.get(0).getId());
         }
         userResponse.setShops(shopResponses);
 
