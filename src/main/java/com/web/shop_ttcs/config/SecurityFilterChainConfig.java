@@ -45,9 +45,9 @@ public class SecurityFilterChainConfig {
 
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/customer/**").permitAll()
+                        .requestMatchers("/customer/**").hasAnyRole("CUSTOMER", "MANAGER")
                         .requestMatchers("/home/**").permitAll()
-                        .requestMatchers("/manager/**").permitAll()
+                        .requestMatchers("/manager/**").hasRole("MANAGER")
 //                        .requestMatchers("/home/register").permitAll()
 //                        .requestMatchers("/home/verify").permitAll()
 //                        .requestMatchers("/home/find").permitAll()
@@ -75,6 +75,7 @@ public class SecurityFilterChainConfig {
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/")
                         .successHandler(myCustomerSuccessHandler)
                         .redirectionEndpoint(redirect -> redirect.baseUri("/login/oauth2/code/*"))
                         .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))

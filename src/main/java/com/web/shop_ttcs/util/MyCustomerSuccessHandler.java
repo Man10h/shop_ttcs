@@ -34,6 +34,17 @@ public class MyCustomerSuccessHandler implements AuthenticationSuccessHandler {
             throw new UsernameNotFoundException("User not found");
         }
         UserEntity userEntity = optional.get();
-        response.getWriter().write(tokenService.generateToken(userEntity));
+
+        String token = tokenService.generateToken(userEntity);
+
+        // Set content type là application/json
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        // Tạo JSON trả về (có thể dùng thư viện như Jackson, ở đây đơn giản dùng String format)
+        String jsonResponse = String.format("{\"token\":\"%s\"}", token);
+
+        response.getWriter().write(jsonResponse);
+        response.getWriter().flush();
     }
 }
