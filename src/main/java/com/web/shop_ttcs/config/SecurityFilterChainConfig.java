@@ -14,6 +14,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -42,36 +47,12 @@ public class SecurityFilterChainConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, MyCustomerSuccessHandler myCustomerSuccessHandler) throws Exception {
         http
-
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/customer/**").hasAnyRole("CUSTOMER", "MANAGER")
                         .requestMatchers("/home/**").permitAll()
                         .requestMatchers("/manager/**").hasRole("MANAGER")
-//                        .requestMatchers("/home/register").permitAll()
-//                        .requestMatchers("/home/verify").permitAll()
-//                        .requestMatchers("/home/find").permitAll()
-//                        .requestMatchers("/home/refreshToken").permitAll()
-//                        .requestMatchers("/home/forgotPassword").permitAll()
-//                        .requestMatchers("/manager/createShop").permitAll()
-//                        .requestMatchers("/manager/deleteShop/{shopId}").permitAll()
-//                        .requestMatchers("/manager/editShop").permitAll()
-//                        .requestMatchers("/home/infoShop").permitAll()
-//                        .requestMatchers("/manager/createProduct").permitAll()
-//                        .requestMatchers("/manager/editProduct").permitAll()
-//                        .requestMatchers("/manager/deleteProduct/{productId}").permitAll()
-//                        .requestMatchers("/customer/follow").permitAll()
-//                        .requestMatchers("/customer/unfollow").permitAll()
-//                        .requestMatchers("/customer/getAllFollowedShops").permitAll()
-//                        .requestMatchers("/customer/createCartItem").permitAll()
-//                        .requestMatchers("/customer/getCartItems").permitAll()
-//                        .requestMatchers("/customer/deleteCartItem/{cartItemId}").permitAll()
-//                        .requestMatchers("/customer/order").permitAll()
-//                        .requestMatchers("/customer/cancel").permitAll()
-//                        .requestMatchers("/customer/editCartItem").permitAll()
-//                        .requestMatchers("/customer/getCartItem").permitAll()
-//                        .requestMatchers("/customer/editRating").permitAll()
-//                        .requestMatchers("/customer/deleteRating/{ratingId}").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -85,5 +66,17 @@ public class SecurityFilterChainConfig {
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 ;
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

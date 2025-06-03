@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Type {
-    Tap_hoa("Tạp hóa"),
-    Thoi_trang("Thời trang"),
-    Vat_lieu("Vật liệu");
+    Electronics("Electronics"),
+    Clothing("Clothing"),
+    Supermarket("Supermarket"),
+    BookStore("BookStore"),
+    Sports("Sports");
+
 
     private final String name;
     private Type(String name) {
