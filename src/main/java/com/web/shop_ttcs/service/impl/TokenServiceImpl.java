@@ -2,8 +2,8 @@ package com.web.shop_ttcs.service.impl;
 
 
 import com.nimbusds.jose.*;
-import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jose.crypto.RSASSAVerifier;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
@@ -14,6 +14,7 @@ import com.web.shop_ttcs.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
@@ -22,10 +23,10 @@ import java.util.Optional;
 public class TokenServiceImpl implements TokenService {
 
     @Autowired
-    private RSAKey rsaKey;
+    private UserRepository userRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private SecretKey secretKey;
 
     @Override
     public String generateToken(UserEntity userEntity) {
@@ -37,10 +38,10 @@ public class TokenServiceImpl implements TokenService {
                 .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 60))
                 .claim("roles", Collections.singletonList(roleName))
                 .build();
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.RS256);
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
         SignedJWT signedJWT = new SignedJWT(jwsHeader, jwtClaimsSet);
         try {
-            JWSSigner jwsSigner = new RSASSASigner(rsaKey);
+            JWSSigner jwsSigner = new MACSigner(secretKey);
             signedJWT.sign(jwsSigner);
             return signedJWT.serialize();
         } catch (Exception e) {
@@ -58,10 +59,10 @@ public class TokenServiceImpl implements TokenService {
                 .expirationTime(new Date(new Date().getTime() + 1000 * 60 * 60 * 7))
                 .claim("roles", Collections.singletonList(roleName))
                 .build();
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.RS256);
+        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
         SignedJWT signedJWT = new SignedJWT(jwsHeader, jwtClaimsSet);
         try {
-            JWSSigner jwsSigner = new RSASSASigner(rsaKey);
+            JWSSigner jwsSigner = new MACSigner(secretKey);
             signedJWT.sign(jwsSigner);
             return signedJWT.serialize();
         } catch (Exception e) {
@@ -72,7 +73,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public boolean validateToken(String token) {
         try{
-            JWSVerifier jwsVerifier = new RSASSAVerifier(rsaKey.toPublicJWK());
+            JWSVerifier jwsVerifier = new MACVerifier(secretKey);
             SignedJWT signedJWT = SignedJWT.parse(token);
             if(!signedJWT.verify(jwsVerifier)){
                 return false;
@@ -112,7 +113,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public boolean validateRefreshToken(String refreshToken) {
         try{
-            JWSVerifier jwsVerifier = new RSASSAVerifier(rsaKey.toPublicJWK());
+            JWSVerifier jwsVerifier = new MACVerifier(secretKey);
             SignedJWT signedJWT = SignedJWT.parse(refreshToken);
             if(!signedJWT.verify(jwsVerifier)){
                 return false;

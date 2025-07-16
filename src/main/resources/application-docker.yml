@@ -1,19 +1,21 @@
 spring:
   datasource:
-    username: root
-    password: Manh2004
-    url: jdbc:mysql://localhost:3306/shop_ttcs
+    username: ${SPRING_DATASOURCE_USERNAME:default}
+    password: ${SPRING_DATASOURCE_PASSWORD:default}
+    url: ${SPRING_DATASOURCE_URL:default}
+
   data:
     redis:
       port: 6379
-      host: localhost
+      host: redis
+
   cache:
     type: redis
 
   jpa:
     hibernate:
       ddl-auto: update
-    #      none, update, auto-update
+
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
@@ -25,8 +27,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: nguyenmanhlc10@gmail.com
-    password: aaof rvju disf hati
+    username: ${SPRING_MAIL_USERNAME:default_username}
+    password: ${SPRING_MAIL_PASSWORD:default_password}
     protocol: smtp
     properties:
       mail:
@@ -41,9 +43,7 @@ server:
 
 
 jwt:
-  secret: IHog2o7M6EPmoJ4Y4WBiLbvbCJ+AnYe3C1VmUQdW4gg=
-
-
+  secret: ${SPRING_JWT_SECRET:default}
 
 
 

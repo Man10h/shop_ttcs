@@ -29,6 +29,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         }
     }
 
+    // ghi image file vao root
     private File convert(MultipartFile multipartFile) throws IOException {
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         FileOutputStream fos = new FileOutputStream(file);

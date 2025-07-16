@@ -55,13 +55,6 @@ public class SecurityFilterChainConfig {
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/")
-                        .successHandler(myCustomerSuccessHandler)
-                        .redirectionEndpoint(redirect -> redirect.baseUri("/login/oauth2/code/*"))
-                        .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
-                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
-                )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
                 ;

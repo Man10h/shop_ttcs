@@ -1,0 +1,38 @@
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql2
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=shop_ttcs
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  redis:
+    image: redis:7.4.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  shopttcs:
+    image: shopttcs:latest
+    container_name: shopttcs
+    environment:
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/shop_ttcs
+      - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
+      - SPRING_JWT_SECRET=${SPRING_JWT_SECRET}
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+      - mysql
+volumes:
+  redis-data:
+  mysql-data:
