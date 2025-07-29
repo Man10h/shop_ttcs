@@ -1,7 +1,9 @@
 package com.web.shop_ttcs.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -9,7 +11,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductResponse {
+public class ProductResponse implements Serializable {
     private Long id;
     private String name;
     private String description;

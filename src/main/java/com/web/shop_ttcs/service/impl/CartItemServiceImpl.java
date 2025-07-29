@@ -1,5 +1,8 @@
 package com.web.shop_ttcs.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.web.shop_ttcs.converter.CartItemConvertTo;
 import com.web.shop_ttcs.exception.ex.CartItemNotFoundException;
 import com.web.shop_ttcs.exception.ex.ProductNotFoundException;
@@ -15,32 +18,34 @@ import com.web.shop_ttcs.repository.ProductRepository;
 import com.web.shop_ttcs.repository.UserRepository;
 import com.web.shop_ttcs.service.CartItemService;
 import com.web.shop_ttcs.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.Duration;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
 
-    @Autowired
-    private CartItemRepository cartItemRepository;
+    private final CartItemRepository cartItemRepository;
+    private final UserRepository userRepository;
+    private final ProductRepository productRepository;
+    private final CartItemConvertTo cartItemConvertTo;
+    private final ProductService productService;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
 
-    @Autowired
-    private UserRepository userRepository;
+    private static Long randomTtl(){
+        return 5 + new Random().nextLong(5);
+    }
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CartItemConvertTo cartItemConvertTo;
-
-    @Autowired
-    private ProductService productService;
 
     @Override
     public String createCartItem(CartItemDTO cartItemDTO) {
@@ -57,7 +62,30 @@ public class CartItemServiceImpl implements CartItemService {
         }
         UserEntity userEntity = optionalUser.get();
         ProductEntity productEntity = optionalProduct.get();
-        if(productEntity.getQuantity() < cartItemDTO.getQuantity()){
+        //Lua script
+        String keyProduct = "product:" + productEntity.getId() + ":stock";
+        Long stock = (Long) redisTemplate.opsForValue().get(keyProduct);
+        if(stock == null){
+            redisTemplate.opsForValue().set(keyProduct, productEntity.getQuantity(), Duration.ofMinutes(randomTtl()));
+        }
+
+        String luaScript =
+                "local stock = tonumber(redis.call('GET', KEYS[1]))\n" +
+                        "local quantity = tonumber(ARGV[1])\n" +
+                        "if stock >= quantity then\n" +
+                        "    redis.call('DECRBY', KEYS[1], quantity)\n" +
+                        "    return 1\n" +
+                        "else\n" +
+                        "    return 0\n" +
+                        "end";
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);
+        redisScript.setScriptText(luaScript);
+        redisScript.setResultType(Long.class);
+
+        Long result = redisTemplate.execute(
+                redisScript, Collections.singletonList(keyProduct), cartItemDTO.getQuantity()
+        );
+        if(result == 0) {
             return "failed to create cart item";
         }
         CartItemEntity cartItemEntity = CartItemEntity.builder()
@@ -72,21 +100,25 @@ public class CartItemServiceImpl implements CartItemService {
         return "create cart item successfully";
     }
 
+    //strategy: cache aside
     @Transactional(readOnly = true)
+    @Cacheable(value = "cartItem", key = "#userId")
     public List<CartItemResponse> getCartItems(Long userId) {
         List<CartItemEntity> cartItemEntities = cartItemRepository.findByUserEntity_Id(userId);
-        if(cartItemEntities.isEmpty()){
-            return null;
+        if (cartItemEntities.isEmpty()) {
+            return List.of();
         }
+
+        // Convert entities to response DTOs
         return cartItemEntities.stream()
-                .map(it -> cartItemConvertTo.convertTo(it))
+                .map(cartItemConvertTo::convertTo)
                 .toList();
     }
 
     @Override
     public CartItemResponse getCartItem(Long cartItemId) {
         Optional<CartItemEntity> optional = cartItemRepository.findById(cartItemId);
-        return optional.map(cartItemEntity -> cartItemConvertTo.convertTo(cartItemEntity)).orElse(null);
+        return optional.map(cartItemConvertTo::convertTo).orElse(null);
     }
 
     @Transactional

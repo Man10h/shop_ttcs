@@ -1,7 +1,9 @@
 package com.web.shop_ttcs.model.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Getter
@@ -9,7 +11,7 @@ import java.util.Date;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItemResponse {
+public class CartItemResponse implements Serializable {
     private Long id;
     private Date orderDate;
     private Date deliveryDate;

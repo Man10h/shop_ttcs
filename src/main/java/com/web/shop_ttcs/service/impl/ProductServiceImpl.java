@@ -18,6 +18,8 @@ import com.web.shop_ttcs.repository.ShopRepository;
 import com.web.shop_ttcs.service.CloudinaryService;
 import com.web.shop_ttcs.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -106,6 +108,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CachePut(value = "product", key = "#productDTO.productId")
     public String editProduct(ProductDTO productDTO) {
         if(productDTO.getProductId() == null) {
             return "can't find product";
@@ -115,23 +118,24 @@ public class ProductServiceImpl implements ProductService {
             throw new ProductNotFoundException("Product not found");
         }
         ProductEntity productEntity = optionalProduct.get();
-        if(!productDTO.getName().isBlank()){
+        if(!productDTO.getName().isEmpty()){
             productEntity.setName(productDTO.getName());
         }
-        if(!productDTO.getDescription().isBlank()){
+        if(!productDTO.getDescription().isEmpty()) {
             productEntity.setDescription(productDTO.getDescription());
         }
         if(productDTO.getPrice() != null){
             productEntity.setPrice(productDTO.getPrice());
         }
-        if(!productDTO.getCategory().isBlank()){
+        if(!productDTO.getCategory().isEmpty()){
             productEntity.setCategory(productDTO.getCategory());
         }
         if (productDTO.getQuantity() != null){
             productEntity.setQuantity(productDTO.getQuantity());
         }
 
-        if(!productDTO.getImages().isEmpty()){
+        if(productDTO.getImages() != null && !productDTO.getImages().isEmpty()){
+            System.out.print(productDTO.getImages().size());
             for(MultipartFile file : productDTO.getImages()) {
                 Map<String, Object> results = cloudinaryService.upload(file);
                 ImageEntity imageEntity = ImageEntity.builder()
@@ -149,6 +153,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CacheEvict(value = "product", key = "#productId")
     public String deleteProduct(Long productId) {
         Optional<ProductEntity> optionalProduct = productRepository.findById(productId);
         if(optionalProduct.isEmpty()) {

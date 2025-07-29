@@ -29,6 +29,7 @@ public class RedisConfig {
                 .cacheDefaults(redisCacheConfiguration)
                 .withCacheConfiguration("token", myCacheConfiguration(Duration.ofMinutes(5)))
                 .withCacheConfiguration("product", myCacheConfiguration(Duration.ofMinutes(5)))
+                .withCacheConfiguration("cartItem", myCacheConfiguration(Duration.ofMinutes(5)))
                 .build();
     }
 

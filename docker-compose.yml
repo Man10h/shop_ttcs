@@ -28,6 +28,7 @@ services:
       - SPRING_MAIL_USERNAME=${SPRING_MAIL_USERNAME}
       - SPRING_MAIL_PASSWORD=${SPRING_MAIL_PASSWORD}
       - SPRING_JWT_SECRET=${SPRING_JWT_SECRET}
+      - SPRING_PROFILES_ACTIVE=docker
     ports:
       - "8081:8081"
     depends_on:
