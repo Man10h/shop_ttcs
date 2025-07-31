@@ -1,8 +1,6 @@
 package com.web.shop_ttcs.service.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.web.shop_ttcs.converter.CartItemConvertTo;
 import com.web.shop_ttcs.exception.ex.CartItemNotFoundException;
 import com.web.shop_ttcs.exception.ex.ProductNotFoundException;
@@ -40,7 +38,6 @@ public class CartItemServiceImpl implements CartItemService {
     private final CartItemConvertTo cartItemConvertTo;
     private final ProductService productService;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final ObjectMapper objectMapper;
 
     private static Long randomTtl(){
         return 5 + new Random().nextLong(5);
@@ -97,22 +94,33 @@ public class CartItemServiceImpl implements CartItemService {
         cartItemRepository.save(cartItemEntity);
         productEntity.setQuantity(productEntity.getQuantity() - cartItemDTO.getQuantity());
         productRepository.save(productEntity);
+
+        String key = "user:" + cartItemDTO.getId() + ":cart";
+        List<CartItemResponse> cartItemResponses = (List<CartItemResponse>) redisTemplate.opsForValue().get(key);
+        if(cartItemResponses != null){
+            redisTemplate.delete(key);
+        }
         return "create cart item successfully";
     }
 
     //strategy: cache aside
-    @Transactional(readOnly = true)
-    @Cacheable(value = "cartItem", key = "#userId")
+    @Override
     public List<CartItemResponse> getCartItems(Long userId) {
+        String key = "user:" + userId + ":cart";
+        List<CartItemResponse> cartItemResponsesRedisCache = (List<CartItemResponse>) redisTemplate.opsForValue().get(key);
+        if(cartItemResponsesRedisCache != null){
+            return cartItemResponsesRedisCache;
+        }
         List<CartItemEntity> cartItemEntities = cartItemRepository.findByUserEntity_Id(userId);
         if (cartItemEntities.isEmpty()) {
             return List.of();
         }
-
-        // Convert entities to response DTOs
-        return cartItemEntities.stream()
-                .map(cartItemConvertTo::convertTo)
-                .toList();
+        List<CartItemResponse> cartItemResponses = new ArrayList<>();
+        for (CartItemEntity cartItemEntity : cartItemEntities) {
+            cartItemResponses.add(cartItemConvertTo.convertTo(cartItemEntity));
+        }
+        redisTemplate.opsForValue().set(key, cartItemResponses, Duration.ofMinutes(randomTtl()));
+        return cartItemResponses;
     }
 
     @Override
@@ -132,6 +140,11 @@ public class CartItemServiceImpl implements CartItemService {
         productEntity.setQuantity(productEntity.getQuantity() + cartItemEntity.getQuantity());
         productRepository.save(productEntity);
         cartItemRepository.delete(cartItemEntity);
+        String key = "user:" + cartItemEntity.getUserEntity().getId() + ":cart";
+        List<CartItemResponse> cartItemResponses = (List<CartItemResponse>) redisTemplate.opsForValue().get(key);
+        if(cartItemResponses != null){
+            redisTemplate.delete(key);
+        }
         return "deleted successfully";
     }
 
@@ -160,7 +173,11 @@ public class CartItemServiceImpl implements CartItemService {
 
         productEntity.setQuantity(productEntity.getQuantity() + quantityOld - cartItemDTO.getQuantity());
         productRepository.save(productEntity);
-
+        String key = "user:" + cartItemDTO.getId() + ":cart";
+        List<CartItemResponse> cartItemResponses = (List<CartItemResponse>) redisTemplate.opsForValue().get(key);
+        if(cartItemResponses != null){
+            redisTemplate.delete(key);
+        }
         return "edit cart item successfully";
     }
 
@@ -178,6 +195,12 @@ public class CartItemServiceImpl implements CartItemService {
         cartItemEntity.setOrderDate(new Date(new Date().getTime()));
         cartItemEntity.setDeliveryDate(new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000));
         cartItemRepository.save(cartItemEntity);
+
+        String key = "user:" + cartItemEntity.getUserEntity().getId() + ":cart";
+        List<CartItemResponse> cartItemResponses = (List<CartItemResponse>) redisTemplate.opsForValue().get(key);
+        if(cartItemResponses != null){
+            redisTemplate.delete(key);
+        }
         return "order cart item successfully";
     }
 
@@ -195,6 +218,12 @@ public class CartItemServiceImpl implements CartItemService {
         cartItemEntity.setOrderDate(null);
         cartItemEntity.setDeliveryDate(null);
         cartItemRepository.save(cartItemEntity);
+
+        String key = "user:" + cartItemEntity.getUserEntity().getId() + ":cart";
+        List<CartItemResponse> cartItemResponses = (List<CartItemResponse>) redisTemplate.opsForValue().get(key);
+        if(cartItemResponses != null){
+            redisTemplate.delete(key);
+        }
         return "cancel cart item successfully";
     }
 

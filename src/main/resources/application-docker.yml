@@ -6,8 +6,8 @@ spring:
 
   data:
     redis:
-      port: 6379
-      host: redis
+      port: ${SPRING_DATA_REDIS_PORT:6379}
+      host: ${SPRING_DATA_REDIS_HOST:localhost}
 
   cache:
     type: redis
