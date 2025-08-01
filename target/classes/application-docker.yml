@@ -14,7 +14,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 
     properties:
       hibernate:
@@ -38,8 +38,13 @@ spring:
             enable: true
             required: true
 
+  liquibase:
+    change-log: classpath:/db/changelog/appchange-log.xml
+    liquibase-schema: ${SPRING_LIQUIBASE_SCHEMA:default}
+
 server:
   port: 8081
+
 
 
 jwt:

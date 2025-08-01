@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -88,7 +89,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .shopEntities(new ArrayList<>())
                 .refreshTokenEntities(new ArrayList<>())
                 .verificationCode(verificationCode)
-                .verificationCodeExpiration(new Date(new Date().getTime() + 1000 * 60 * 15))
+                .verificationCodeExpiration(new Date(new Date().getTime())
+                        .toInstant().atZone(ZoneId.systemDefault())
+                        .toLocalTime().plusMinutes(15))
                 .role(role)
                 .email(userRegisterDTO.getEmail())
                 .enabled(false)
@@ -112,7 +115,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return "user already verified";
         }
         if (!verificationCode.equals(userEntity.getVerificationCode())
-            || !new Date(new Date().getTime()).before(userEntity.getVerificationCodeExpiration())) {
+            || !new Date(new Date().getTime()).toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalTime()
+                .isBefore(userEntity.getVerificationCodeExpiration())) {
             return "failed to verify";
         }
         userEntity.setVerificationCode(null);
@@ -136,7 +141,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String newCode = generateCode();
 
         userEntity.setVerificationCode(newCode);
-        userEntity.setVerificationCodeExpiration(new Date(new Date().getTime() + 1000 * 60 * 15));
+        userEntity.setVerificationCodeExpiration(new Date(new Date().getTime())
+                .toInstant().atZone(ZoneId.systemDefault())
+                .toLocalTime().plusMinutes(15));
         userRepository.save(userEntity);
 
         sendCode(email, "VerificationCode", newCode);

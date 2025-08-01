@@ -9,7 +9,6 @@ import com.web.shop_ttcs.model.dto.CartItemDTO;
 import com.web.shop_ttcs.model.entity.CartItemEntity;
 import com.web.shop_ttcs.model.entity.ProductEntity;
 import com.web.shop_ttcs.model.entity.UserEntity;
-import com.web.shop_ttcs.model.enums.CartItemStatus;
 import com.web.shop_ttcs.model.response.CartItemResponse;
 import com.web.shop_ttcs.repository.CartItemRepository;
 import com.web.shop_ttcs.repository.ProductRepository;
@@ -17,15 +16,13 @@ import com.web.shop_ttcs.repository.UserRepository;
 import com.web.shop_ttcs.service.CartItemService;
 import com.web.shop_ttcs.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -192,8 +189,14 @@ public class CartItemServiceImpl implements CartItemService {
             return "failed to order cart item";
         }
         cartItemEntity.setStatus("ORDERED");
-        cartItemEntity.setOrderDate(new Date(new Date().getTime()));
-        cartItemEntity.setDeliveryDate(new Date(new Date().getTime() + 3 * 24 * 60 * 60 * 1000));
+        cartItemEntity.setOrderDate(
+                new Date(new Date().getTime()).toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+        );
+        cartItemEntity.setDeliveryDate(new Date(new Date().getTime()).toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate().plusDays(3L));
         cartItemRepository.save(cartItemEntity);
 
         String key = "user:" + cartItemEntity.getUserEntity().getId() + ":cart";

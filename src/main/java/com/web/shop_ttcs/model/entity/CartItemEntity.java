@@ -3,10 +3,11 @@ package com.web.shop_ttcs.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
-@Table(name = "cartItem")
+@Table(name = "cart_item")
 @Getter
 @Setter
 @Builder
@@ -17,8 +18,8 @@ public class CartItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date orderDate;
-    private Date deliveryDate;
+    private LocalDate orderDate;
+    private LocalDate deliveryDate;
     private Long quantity;
     private String status;
 

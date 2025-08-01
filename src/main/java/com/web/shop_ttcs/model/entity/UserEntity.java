@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalTime;
 import java.util.*;
 
 @Getter
@@ -43,7 +44,7 @@ public class UserEntity implements UserDetails {
     //
     private Boolean enabled;
     private String verificationCode;
-    private Date verificationCodeExpiration;
+    private LocalTime verificationCodeExpiration;
 
     // relational
     @OneToMany(mappedBy = "userEntity", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
