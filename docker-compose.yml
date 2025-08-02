@@ -19,7 +19,7 @@ services:
       - redis-data:/data
 
   shopttcs:
-    image: shopttcs:latest
+    image: nguyenmanhlc10/shopttcs:latest
     container_name: shopttcs
     environment:
       - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
@@ -30,6 +30,7 @@ services:
       - SPRING_JWT_SECRET=${SPRING_JWT_SECRET}
       - SPRING_DATA_REDIS_PORT=${SPRING_DATA_REDIS_PORT}
       - SPRING_DATA_REDIS_HOST=${SPRING_DATA_REDIS_HOST}
+      - SPRING_LIQUIBASE_SCHEMA=${SPRING_LIQUIBASE_SCHEMA}
     ports:
       - "8081:8081"
     depends_on:
