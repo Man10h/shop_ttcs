@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -190,13 +191,11 @@ public class CartItemServiceImpl implements CartItemService {
         }
         cartItemEntity.setStatus("ORDERED");
         cartItemEntity.setOrderDate(
-                new Date(new Date().getTime()).toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
+                LocalDate.now()
         );
-        cartItemEntity.setDeliveryDate(new Date(new Date().getTime()).toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate().plusDays(3L));
+        cartItemEntity.setDeliveryDate(
+                LocalDate.now().plusDays(3)
+        );
         cartItemRepository.save(cartItemEntity);
 
         String key = "user:" + cartItemEntity.getUserEntity().getId() + ":cart";

@@ -4,7 +4,6 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <!-- Thêm changeSet tại đây -->
-    <include file="/db/changelog/scripts/create_table.sql" />
-    <include file="db/changelog/scripts/insert_role_table.sql"/>
+    <include file="db/changelog/scripts/create_table.sql"/>
+    <include file="db/changelog/scripts/insert_table_role.sql"/>
 </databaseChangeLog>

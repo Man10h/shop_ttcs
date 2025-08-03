@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -13,8 +14,8 @@ import java.util.Date;
 @NoArgsConstructor
 public class CartItemResponse implements Serializable {
     private Long id;
-    private Date orderDate;
-    private Date deliveryDate;
+    private LocalDate orderDate;
+    private LocalDate deliveryDate;
     private Long quantity;
     private String status;
     private ProductResponse productResponse;

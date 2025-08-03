@@ -4,6 +4,8 @@ spring:
     password: Manh2004
     url: jdbc:mysql://localhost:3306/shop_ttcs
 
+
+
   data:
     redis:
       port: 6379
@@ -36,6 +38,7 @@ spring:
           starttls:
             enable: true
             required: true
+
   liquibase:
     change-log: classpath:/db/changelog/appchange-log.xml
     liquibase-schema: shop_ttcs
