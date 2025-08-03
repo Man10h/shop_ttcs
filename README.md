@@ -1,5 +1,8 @@
 
 # TEST API
+Deploy Webservice Render: https://shop-ttcs-b6zr.onrender.com/
+
+Database: FreeSQLDatabase 
 
 ## 1. Trang chủ
 
