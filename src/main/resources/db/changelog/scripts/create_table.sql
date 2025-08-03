@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset manh:131
+--changeset manh:1231
 
 CREATE TABLE IF NOT EXISTS role (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -14,14 +14,14 @@ CREATE TABLE IF NOT EXISTS user (
     last_name VARCHAR(255),
     age BIGINT,
     sex VARCHAR(255),
-    phoneNumber VARCHAR(255),
+    phone_number VARCHAR(255),
     email VARCHAR(255),
     coins BIGINT,
     enabled BOOLEAN,
     verification_code VARCHAR(255),
     verification_code_expiration TIME,
-    roleId BIGINT,
-    CONSTRAINT FK_user_role FOREIGN KEY (roleId) REFERENCES role(id)
+    role_id BIGINT,
+    CONSTRAINT FK_user_role FOREIGN KEY (role_id) REFERENCES role(id)
 );
 
 CREATE TABLE IF NOT EXISTS shop (
