@@ -41,7 +41,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 }' https://shop-ttcs-b6zr.onrender.com/home/register
 ```
 
-Trả về chuỗi thông báo
+Trả về chuỗi thông báo đăng kí thành công hay thất bại
 
 ---
 
@@ -54,3 +54,14 @@ curl -X GET https://shop-ttcs-b6zr.onrender.com/home/infoToken?token=TOKEN
 Trả về JSON thông tin người dùng
 
 ---
+
+## 5. Verify người dùng
+
+```bash
+curl -X GET https://shop-ttcs-b6zr.onrender.com/home/verify?email=youremail@gmail.com&verificationCode=yourcode
+```
+
+Trả về chuỗi thông báo verify thành công hay thất bại
+
+---
+
