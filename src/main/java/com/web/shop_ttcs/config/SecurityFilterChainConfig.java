@@ -4,6 +4,7 @@ import com.web.shop_ttcs.service.impl.CustomOAuth2UserService;
 import com.web.shop_ttcs.util.AuditorAwareImpl;
 import com.web.shop_ttcs.util.MyCustomerSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -32,6 +33,9 @@ public class SecurityFilterChainConfig {
 
     @Autowired
     private CustomOAuth2UserService customOAuth2UserService;
+
+    @Value("${frontend.url}")
+    private String frontend_url;
 
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
@@ -64,7 +68,7 @@ public class SecurityFilterChainConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+        configuration.setAllowedOrigins(Arrays.asList(frontend_url));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
