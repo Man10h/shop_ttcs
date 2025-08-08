@@ -8,7 +8,7 @@ spring:
     redis:
       port: 6379
       host: localhost
-
+      password:
   cache:
     type: redis
 
